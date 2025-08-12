@@ -10,7 +10,8 @@ async function UsersTable() {
   const options = setCookiesOnReq(cookieStore);
   const { users } = await getAllUsersApi(options);
 
-  if (!users.length) return <Empty resourceName="کاربری" />;
+  if (!users?.length) return <Empty resourceName="کاربری" />;
+
 
   return (
     <Table>
