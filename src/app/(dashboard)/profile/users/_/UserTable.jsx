@@ -6,29 +6,37 @@ import { cookies } from "next/headers";
 import setCookiesOnReq from "@/utils/setCookieOnReq";
 
 async function UsersTable() {
-  const cookieStore = cookies();
-  const options = setCookiesOnReq(cookieStore);
-  const { users } = await getAllUsersApi(options);
+  try {
+    const cookieStore = cookies();
+    const options = setCookiesOnReq(cookieStore);
 
-  if (!users?.length) return <Empty resourceName="کاربری" />;
+    const data = await getAllUsersApi(options);
 
+    const users = data?.users || [];
 
-  return (
-    <Table>
-      <Table.Header>
-        <th>#</th>
-        <td>پروفایل</td>
-        <th>نام کاربر</th>
-        <th>ایمیل کاربر</th>
-        <th>تاریخ ورود</th>
-      </Table.Header>
+    if (!users.length) return <Empty resourceName="کاربری" />;
 
-      <Table.Body>
-        {users.map((user, index) => (
-          <UserRow key={user._id} user={user} index={index} />
-        ))}
-      </Table.Body>
-    </Table>
-  );
+    return (
+      <Table>
+        <Table.Header>
+          <th>#</th>
+          <td>پروفایل</td>
+          <th>نام کاربر</th>
+          <th>ایمیل کاربر</th>
+          <th>تاریخ ورود</th>
+        </Table.Header>
+
+        <Table.Body>
+          {users.map((user, index) => (
+            <UserRow key={user._id} user={user} index={index} />
+          ))}
+        </Table.Body>
+      </Table>
+    );
+  } catch (err) {
+    return <Empty resourceName="کاربری" />;
+  }
 }
+
+
 export default UsersTable;
